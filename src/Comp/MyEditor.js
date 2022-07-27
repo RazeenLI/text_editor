@@ -5,44 +5,12 @@ import { createEditor, Editor, Transforms, Text } from 'slate'
 
 // 导入 Slate 组件和 React 插件。
 import { Slate, Editable, withReact } from 'slate-react'
+import CustomEditor from './CustomEditor'
+import ToolBox from "./ToolBox";
+import {MdOutlineFormatBold} from "react-icons/md";
+import {Button} from "antd";
 
-// Define our own custom set of helpers.
-const CustomEditor = {
-    isBoldMarkActive(editor) {
-        const [match] = Editor.nodes(editor, {
-            match: n => n.bold === true,
-            universal: true,
-        })
 
-        return !!match
-    },
-
-    isCodeBlockActive(editor) {
-        const [match] = Editor.nodes(editor, {
-            match: n => n.type === 'code',
-        })
-
-        return !!match
-    },
-
-    toggleBoldMark(editor) {
-        const isActive = CustomEditor.isBoldMarkActive(editor)
-        Transforms.setNodes(
-            editor,
-            { bold: isActive ? null : true },
-            { match: n => Text.isText(n), split: true }
-        )
-    },
-
-    toggleCodeBlock(editor) {
-        const isActive = CustomEditor.isCodeBlockActive(editor)
-        Transforms.setNodes(
-            editor,
-            { type: isActive ? null : 'code' },
-            { match: n => Editor.isBlock(editor, n) }
-        )
-    },
-}
 
 
 export default function MyEditor() {
@@ -84,6 +52,14 @@ export default function MyEditor() {
             }}
         >
             <div>
+                <ToolBox editor/>
+                <Button
+                    icon={<MdOutlineFormatBold size='1.5em' />}
+                    onMouseDown={event => {
+                        event.preventDefault()
+                        CustomEditor.toggleBoldMark(editor)
+                    }}
+                />
                 <button
                     onMouseDown={event => {
                         event.preventDefault()
