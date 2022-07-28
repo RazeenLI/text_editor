@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
 import './App.css';
-// import LeftMenu from "./Comp/LeftMenu";
-import { Layout } from 'antd';
 import MyEditor from "./Comp/MyEditor";
-// import TopTabs from "./Comp/TopTabs";
+import {Box} from "@mui/material";
 
-const { Header, Footer, Sider, Content } = Layout;
 
 function App() {
   return (
-      <React.Fragment>
-          <Header>Header</Header>
-          <Content>
+      <Box
+          sx={{
+              height: '100eh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+          }}
+      >
+          <Box>
+              Header
+          </Box>
+          <Box sx={{ flexGrow: 1}}>
               <MyEditor/>
-          </Content>
-          <Footer>Footer</Footer>
-      </React.Fragment>
+          </Box>
+          <Box>
+              Footer
+          </Box>
+      </Box>
   )
 }
 

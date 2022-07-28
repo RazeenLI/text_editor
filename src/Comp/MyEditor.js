@@ -7,8 +7,7 @@ import { createEditor, Editor, Transforms, Text } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 import CustomEditor from './CustomEditor'
 import ToolBox from "./ToolBox";
-import {MdOutlineFormatBold} from "react-icons/md";
-import {Button} from "antd";
+import {Box, Container, Divider, Paper} from "@mui/material";
 
 
 
@@ -51,70 +50,81 @@ export default function MyEditor() {
                 localStorage.setItem('content', content)
             }}
         >
-            <div>
-                <ToolBox editor/>
-                <Button
-                    icon={<MdOutlineFormatBold size='1.5em' />}
-                    onMouseDown={event => {
-                        event.preventDefault()
-                        CustomEditor.toggleBoldMark(editor)
-                    }}
-                />
-                <button
-                    onMouseDown={event => {
-                        event.preventDefault()
-                        CustomEditor.toggleBoldMark(editor)
-                    }}
-                >
-                    Bold
-                </button>
-                <button
-                    onMouseDown={event => {
-                        event.preventDefault()
-                        CustomEditor.toggleCodeBlock(editor)
-                    }}
-                >
-                    Code Block
-                </button>
-            </div>
-            <Editable
-                renderElement={renderElement}
-                // 传入 `renderLeaf` 函数。
-                renderLeaf={renderLeaf}
+            <ToolBox editor={editor}/>
+            <Divider/>
+            <br/>
+            <Container >
+                <Paper elevation={1} >
+                    <Box p={3}>
+                        <Editable
+                            renderElement={renderElement}
+                            // 传入 `renderLeaf` 函数。
+                            renderLeaf={renderLeaf}
+                            onKeyDown={event => {
+                                if (!event.ctrlKey) {
+                                    return
+                                }
 
-                onKeyDown={event => {
-                    if (!event.ctrlKey) {
-                        return
-                    }
+                                switch (event.key) {
+                                    case '`': {
+                                        event.preventDefault()
+                                        CustomEditor.toggleCodeBlock(editor)
+                                        break
+                                    }
 
-                    switch (event.key) {
-                        case '`': {
-                            event.preventDefault()
-                            CustomEditor.toggleCodeBlock(editor)
-                            break
-                        }
-
-                        case 'b': {
-                            event.preventDefault()
-                            CustomEditor.toggleBoldMark(editor)
-                            break
-                        }
-                    }
-                }}
-            />
+                                    case 'b': {
+                                        event.preventDefault()
+                                        CustomEditor.toggleMark(editor, 'bold')
+                                        break
+                                    }
+                                }
+                            }}
+                        />
+                    </Box>
+                </Paper>
+            </Container>
         </Slate>
     )
 };
 
-const Leaf = props => {
-    return (
-        <span
-            {...props.attributes}
-            style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}
-        >
-            {props.children}
-        </span>
-    )
+const Leaf = ({ attributes, children, leaf }) => {
+    if (leaf.bold) {
+        children = <strong>{children}</strong>;
+    }
+    if (leaf.code) {
+        children = <code>{children}</code>;
+    }
+    if (leaf.italic) {
+        children = <em>{children}</em>;
+    }
+    if (leaf.underline) {
+        children = <u>{children}</u>;
+    }
+    if (leaf.strikethrough) {
+        children = <span style={{textDecoration:'line-through'}}>{children}</span>;
+    }
+    if(leaf.superscript){
+        children = <sup>{children}</sup>
+    }
+    if(leaf.subscript){
+        children = <sub>{children}</sub>
+    }
+    if(leaf.color){
+        children = <span style={{color:leaf.color}}>{children}</span>
+    }
+    if(leaf.bgColor){
+        children = <span style={{backgroundColor:leaf.bgColor}}>{children}</span>
+    }
+    if(leaf.fontSize){
+        // const size = sizeMap[leaf.fontSize]
+        // children = <span style={{fontSize:size}}>{children}</span>
+    }
+    if(leaf.fontFamily){
+        // const family = fontFamilyMap[leaf.fontFamily]
+        // children = <span style={{fontFamily:family}}>{children}</span>
+    }
+
+    return <span {...attributes}>{children}</span>;
 }
 
 const CodeElement = props => {
