@@ -9,3 +9,4 @@
 - [tutorial](https://rain120.github.io/athena/zh/slate/api/locations.html#%E8%B7%AF%E5%BE%84-path)
 - [icon](https://react-icons.github.io/react-icons/search?q=mdoutlineemo)
 - [icon](https://fonts.google.com/icons?icon.category=Text+Formatting&icon.query=format)
+- [demo](https://codesandbox.io/s/yt8jc?file=/src/components/SlateEditor/Editor.jsx:3148-3155)
